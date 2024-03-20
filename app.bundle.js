@@ -36565,13 +36565,13 @@ var Application = function () {
       // this.fitGreenBox(pelleHandShape, pelleHandBody);
       // this.fitGreenBox(pelleHeadShape, pelleHeadBody);
 
-      this.fitSprite(chassisShape, chassisBody, "../img/tractor-chasis.png", { width: 1300, height: 690 });
-      this.fitSprite(wheelShape1, wheelBody1, "../img/backwheel.png", { width: 622, height: 622 });
-      this.fitSprite(wheelShape2, wheelBody2, "../img/frontwheel.png", { width: 382, height: 382 });
-      this.fitSprite(pelleHeadShape, pelleHeadBody, '../img/pelle-hlava.png', { width: 140, height: 165 });
-      this.fitSprite(taskaShape, taskaBody, '../img/taska.png', { width: 600, height: 400 });
-      this.fitSprite(pelleShape, pelleBody, '../img/pelle-body.png', { width: 176, height: 271 });
-      this.fitSprite(pelleHandShape, pelleHandBody, '../img/pelle-arm.png', { width: 131, height: 308 });
+      this.fitSprite(chassisShape, chassisBody, "https://hmira.github.io/pellehra/img/tractor-chasis.png", { width: 1300, height: 690 });
+      this.fitSprite(wheelShape1, wheelBody1, "https://hmira.github.io/pellehra/img/backwheel.png", { width: 622, height: 622 });
+      this.fitSprite(wheelShape2, wheelBody2, "https://hmira.github.io/pellehra/img/frontwheel.png", { width: 382, height: 382 });
+      this.fitSprite(pelleHeadShape, pelleHeadBody, 'https://hmira.github.io/pellehra/img/pelle-hlava.png', { width: 140, height: 165 });
+      this.fitSprite(taskaShape, taskaBody, 'https://hmira.github.io/pellehra/img/taska.png', { width: 600, height: 400 });
+      this.fitSprite(pelleShape, pelleBody, 'https://hmira.github.io/pellehra/img/pelle-body.png', { width: 176, height: 271 });
+      this.fitSprite(pelleHandShape, pelleHandBody, 'https://hmira.github.io/pellehra/img/pelle-arm.png', { width: 131, height: 308 });
 
       this.backWheelPosition = wheelBody1.position;
 
