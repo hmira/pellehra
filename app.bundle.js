@@ -36402,8 +36402,8 @@ var Application = function () {
 
 
       // Create seat
-      var seatBody = new p2.Body({ mass: 1, position: [-2.4, 1.3] }),
-          seatShape = new p2.Box({ width: 0.4, height: 0.1 });
+      var seatBody = new p2.Body({ mass: 1, position: [-2.2, 1.0] }),
+          seatShape = new p2.Box({ width: 0.8, height: 0.8 });
       seatBody.addShape(seatShape);
       this.world.addBody(seatBody);
 
@@ -36456,7 +36456,7 @@ var Application = function () {
 
       var seatPelleJoint = new p2.RevoluteConstraint(pelleBody, seatBody, {
         localPivotA: [0, -0.2],
-        localPivotB: [0, 0.2]
+        localPivotB: [-0.23, 0.4]
       });
       seatPelleJoint.setLimits(-Math.PI / 24, Math.PI / 8);
       this.world.addConstraint(seatPelleJoint);
@@ -36487,7 +36487,7 @@ var Application = function () {
       handPelleJoint.setLimits(-Math.PI / 24, Math.PI / 8);
       this.world.addConstraint(handPelleJoint);
 
-      var taskaBody = new p2.Body({ mass: 0.11, position: [-2.2, 1.2] }),
+      var taskaBody = new p2.Body({ mass: 0.01, position: [-2.2, 1.2] }),
           taskaShape = new p2.Box({ width: 0.6, height: 0.4 });
       taskaBody.addShape(taskaShape);
       taskaShape.collisionGroup = null;
@@ -36557,7 +36557,7 @@ var Application = function () {
       }));
 
       // this.fitGreenBox(chassisShape, chassisBody);
-      this.fitGreenBox(seatShape, seatBody);
+      // this.fitGreenBox(seatShape, seatBody);
       // this.fitGreenBox(seatShape1, seatBody1);
       this.fitGreenBox(obstacleShape, obstacleBody);
       this.fitGreenBox(obstacleShape2, obstacleBody2);
@@ -36568,6 +36568,7 @@ var Application = function () {
       this.fitSprite(chassisShape, chassisBody, "https://hmira.github.io/pellehra/img/tractor-chasis.png", { width: 1300, height: 690 });
       this.fitSprite(wheelShape1, wheelBody1, "https://hmira.github.io/pellehra/img/backwheel.png", { width: 622, height: 622 });
       this.fitSprite(wheelShape2, wheelBody2, "https://hmira.github.io/pellehra/img/frontwheel.png", { width: 382, height: 382 });
+      this.fitSprite(seatShape, seatBody, 'https://hmira.github.io/pellehra/img/pelle-legs.png', { width: 397, height: 360 });
       this.fitSprite(pelleHeadShape, pelleHeadBody, 'https://hmira.github.io/pellehra/img/pelle-hlava.png', { width: 140, height: 165 });
       this.fitSprite(taskaShape, taskaBody, 'https://hmira.github.io/pellehra/img/taska.png', { width: 600, height: 400 });
       this.fitSprite(pelleShape, pelleBody, 'https://hmira.github.io/pellehra/img/pelle-body.png', { width: 176, height: 271 });
