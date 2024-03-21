@@ -36500,6 +36500,66 @@ var Application = function () {
       taskaPelleJoint.setLimits(-Math.PI / 8, Math.PI / 8);
       this.world.addConstraint(taskaPelleJoint);
 
+      // Create trailer
+      var trailerBody = new p2.Body({
+        mass: 0.1, // Setting mass > 0 makes it dynamic
+        position: [-4, 1] // Initial position
+      });
+      var trailerShape = new p2.Box({ width: 2, height: 0.4 }); // Chassis shape is a rectangle
+      trailerBody.addShape(trailerShape);
+      this.world.addBody(trailerBody);
+
+      // Create wheels
+      var trailerWheelBody = new p2.Body({ mass: 0.1, position: [trailerBody.position[0] + 0.5, 0.3] });
+      var trailerWheelShape = new p2.Circle({ radius: 0.2 });
+      trailerWheelBody.addShape(trailerWheelShape);
+      this.world.addBody(trailerWheelBody);
+
+      this.trailerWheelMount = new p2.RevoluteConstraint(trailerBody, trailerWheelBody, {
+        localPivotA: [0.5, -0.35], // Where to hinge wheel on the trailer
+        localPivotB: [0, 0], // Where the hinge is in the wheel (center)
+        collideConnected: false
+      });
+      this.trailerHook = new p2.RevoluteConstraint(trailerBody, chassisBody, {
+        localPivotA: [1.5, -0.35], // Where to hinge second wheel on the chassis
+        localPivotB: [-0.2, -0.35], // Where the hinge is in the wheel (center)
+        collideConnected: false
+      });
+      // this.world.addConstraint(revoluteBack);
+      this.world.addConstraint(this.trailerWheelMount);
+      this.world.addConstraint(this.trailerHook);
+
+      var trailerPlowBody1 = new p2.Body({
+        mass: 0.01, // Setting mass > 0 makes it dynamic
+        position: [-4.8, 0.72] // Initial position
+      });
+      var trailerPlowShape1 = new p2.Box({ width: 0.2, height: 0.45 });
+      trailerPlowBody1.addShape(trailerPlowShape1);
+      this.world.addBody(trailerPlowBody1);
+      var trailerPlowJoint1 = new p2.LockConstraint(trailerBody, trailerPlowBody1, null);
+      this.world.addConstraint(trailerPlowJoint1);
+
+      var trailerPlowBody2 = new p2.Body({
+        mass: 0.01, // Setting mass > 0 makes it dynamic
+        position: [-4.4, 0.72] // Initial position
+      });
+      var trailerPlowShape2 = new p2.Box({ width: 0.2, height: 0.45 });
+      trailerPlowBody2.addShape(trailerPlowShape2);
+      this.world.addBody(trailerPlowBody2);
+      var trailerPlowJoint2 = new p2.LockConstraint(trailerBody, trailerPlowBody2, null);
+      this.world.addConstraint(trailerPlowJoint2);
+
+      var trailerPlowBody3 = new p2.Body({
+        mass: 0.01, // Setting mass > 0 makes it dynamic
+        position: [-4.0, 0.72] // Initial position
+      });
+      var trailerPlowShape3 = new p2.Box({ width: 0.2, height: 0.45 });
+      trailerPlowBody3.addShape(trailerPlowShape3);
+      this.world.addBody(trailerPlowBody3);
+      var trailerPlowJoint3 = new p2.LockConstraint(trailerBody, trailerPlowBody3, null);
+      this.world.addConstraint(trailerPlowJoint3);
+      trailerPlowBody1.collisionGroup = trailerPlowBody2.collisionGroup = trailerPlowBody3.collisionGroup = null;
+
       // Disable collisions between chassis and wheels
       var WHEELS = 1,
           // Define bits for each shape type
@@ -36508,13 +36568,13 @@ var Application = function () {
           OBSTACLE = 8,
           OTHER = 16;
 
-      wheelShape1.collisionGroup = wheelShape2.collisionGroup = WHEELS; // Assign groups
+      trailerWheelShape.collisionGroup = wheelShape1.collisionGroup = wheelShape2.collisionGroup = WHEELS; // Assign groups
       chassisShape.collisionGroup = CHASSIS;
       obstacleShape.collisionGroup = OBSTACLE;
       obstacleShape2.collisionGroup = OBSTACLE;
       this.groundShape.collisionGroup = GROUND;
 
-      wheelShape1.collisionMask = wheelShape2.collisionMask = GROUND | OBSTACLE | OTHER; // Wheels can only collide with ground
+      trailerWheelShape.collisionMask = wheelShape1.collisionMask = wheelShape2.collisionMask = GROUND | OBSTACLE | OTHER; // Wheels can only collide with ground
       chassisShape.collisionMask = GROUND | OTHER; // Chassis can only collide with ground
       obstacleShape.collisionMask = GROUND | WHEELS | CHASSIS | OBSTACLE | OTHER;
       obstacleShape2.collisionMask = GROUND | WHEELS | CHASSIS | OBSTACLE | OTHER;
@@ -36561,18 +36621,27 @@ var Application = function () {
       // this.fitGreenBox(seatShape1, seatBody1);
       this.fitGreenBox(obstacleShape, obstacleBody);
       this.fitGreenBox(obstacleShape2, obstacleBody2);
+      // this.fitGreenBox(trailerPlowShape1,trailerPlowBody1);
+      // this.fitGreenBox(trailerPlowShape2,trailerPlowBody2);
+      // this.fitGreenBox(trailerPlowShape3,trailerPlowBody3);
       // this.fitGreenBox(pelleShape, pelleBody);
       // this.fitGreenBox(pelleHandShape, pelleHandBody);
       // this.fitGreenBox(pelleHeadShape, pelleHeadBody);
 
-      this.fitSprite(chassisShape, chassisBody, "https://hmira.github.io/pellehra/img/tractor-chasis.png", { width: 1300, height: 690 });
-      this.fitSprite(wheelShape1, wheelBody1, "https://hmira.github.io/pellehra/img/backwheel.png", { width: 622, height: 622 });
-      this.fitSprite(wheelShape2, wheelBody2, "https://hmira.github.io/pellehra/img/frontwheel.png", { width: 382, height: 382 });
-      this.fitSprite(seatShape, seatBody, 'https://hmira.github.io/pellehra/img/pelle-legs.png', { width: 397, height: 360 });
-      this.fitSprite(pelleHeadShape, pelleHeadBody, 'https://hmira.github.io/pellehra/img/pelle-hlava.png', { width: 140, height: 165 });
-      this.fitSprite(taskaShape, taskaBody, 'https://hmira.github.io/pellehra/img/taska.png', { width: 600, height: 400 });
-      this.fitSprite(pelleShape, pelleBody, 'https://hmira.github.io/pellehra/img/pelle-body.png', { width: 176, height: 271 });
-      this.fitSprite(pelleHandShape, pelleHandBody, 'https://hmira.github.io/pellehra/img/pelle-arm.png', { width: 131, height: 308 });
+      this.fitSprite(trailerShape, trailerBody, 'https://hmira.github.io/pellehra/trailer.png', { width: 1218, height: 346 });
+      this.fitSprite(chassisShape, chassisBody, "https://hmira.github.io/pellehra/tractor-chasis.png", { width: 1300, height: 690 });
+      this.fitSprite(wheelShape1, wheelBody1, "https://hmira.github.io/pellehra/backwheel.png", { width: 622, height: 622 });
+      this.fitSprite(wheelShape2, wheelBody2, "https://hmira.github.io/pellehra/frontwheel.png", { width: 382, height: 382 });
+      this.fitSprite(seatShape, seatBody, 'https://hmira.github.io/pellehra/pelle-legs.png', { width: 397, height: 360 });
+      this.fitSprite(pelleHeadShape, pelleHeadBody, 'https://hmira.github.io/pellehra/pelle-hlava.png', { width: 140, height: 165 });
+      this.fitSprite(taskaShape, taskaBody, 'https://hmira.github.io/pellehra/taska.png', { width: 600, height: 400 });
+      this.fitSprite(pelleShape, pelleBody, 'https://hmira.github.io/pellehra/pelle-body.png', { width: 176, height: 271 });
+      this.fitSprite(pelleHandShape, pelleHandBody, 'https://hmira.github.io/pellehra/pelle-arm.png', { width: 131, height: 308 });
+      this.fitSprite(trailerWheelShape, trailerWheelBody, 'https://hmira.github.io/pellehra/trailer-wheel.png', { width: 209, height: 209 });
+
+      this.fitSprite(trailerPlowShape1, trailerPlowBody1, 'https://hmira.github.io/pellehra/plow.png', { width: 147, height: 273 });
+      this.fitSprite(trailerPlowShape2, trailerPlowBody2, 'https://hmira.github.io/pellehra/plow.png', { width: 147, height: 273 });
+      this.fitSprite(trailerPlowShape3, trailerPlowBody3, 'https://hmira.github.io/pellehra/plow.png', { width: 147, height: 273 });
 
       this.backWheelPosition = wheelBody1.position;
 
@@ -36582,6 +36651,21 @@ var Application = function () {
         if (wheelBody1.angularVelocity * torque < max) wheelBody1.angularForce += torque;
         // if(wheelBody2.angularVelocity*torque < max) wheelBody2.angularForce += torque;
       });
+    }
+  }, {
+    key: 'putDownPlow',
+    value: function putDownPlow() {
+      console.log('putDownPlow');
+      console.log(this.trailerWheelMount.pivotA);
+      this.trailerWheelMount.pivotA[1] = -0.15;
+      this.trailerHook.pivotA[1] = -0.15;
+    }
+  }, {
+    key: 'putUpPlow',
+    value: function putUpPlow() {
+      console.log('putUpPlow');
+      this.trailerWheelMount.pivotA[1] = -0.35;
+      this.trailerHook.pivotA[1] = -0.35;
     }
   }, {
     key: 'rescaleTractor',
@@ -36641,12 +36725,20 @@ document.addEventListener("keydown", function (evt) {
       // left
       torque = t;
       break;
+    case 32:
+      //space
+      console.log('space');
+      app.putDownPlow();
+      break;
   }
 });
 
 document.addEventListener("keyup", function (evt) {
   // console.log('keyup', evt);
   torque = 0;
+  if (evt.keyCode == 32) {
+    app.putUpPlow();
+  }
 });
 
 window.addEventListener("resize", function (evt) {
